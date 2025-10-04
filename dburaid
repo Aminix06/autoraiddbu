@@ -6,332 +6,381 @@ local localPlayer = Players.LocalPlayer
 
 -- 1. Controllo Immediato: Eseguito una sola volta all'avvio dello script.
 if #Players:GetPlayers() > 1 then
-    localPlayer:Kick("Kick: Il server non è vuoto. Lo script non può essere eseguito.")
-    return -- Interrompe l'esecuzione di tutto lo script se il server non è vuoto.
+    localPlayer:Kick("Kick: Il server non è vuoto. Lo script non può essere eseguito.")
+    return -- Interrompe l'esecuzione di tutto lo script se il server non è vuoto.
 end
 
 -- 2. Controllo Continuo: Inizia a monitorare in background.
 task.spawn(function()
-    while task.wait() do -- task.wait() controlla ogni frame, il ritardo più basso possibile.
-        if #Players:GetPlayers() > 1 then
-            localPlayer:Kick("Kick: Un altro giocatore è entrato nel server.")
-            break -- Esce dal loop dopo il kick.
-        end
-    end
+    while task.wait() do -- task.wait() controlla ogni frame, il ritardo più basso possibile.
+        if #Players:GetPlayers() > 1 then
+            localPlayer:Kick("Kick: Un altro giocatore è entrato nel server.")
+            break -- Esce dal loop dopo il kick.
+        end
+    end
 end)
 
 -- Il resto dello script verrà eseguito solo se il controllo iniziale ha successo.
 --==============================================================================
 
 local function StartTheGame()
-    local playerGui = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-    local mainGui = playerGui:WaitForChild("Main", 10)
+    local playerGui = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+    local mainGui = playerGui:WaitForChild("Main", 10) -- Attendi fino a 10 secondi
 
-    if not mainGui then
-        warn("StartTheGame: GUI 'Main' non trovata. Impossibile continuare la funzione.")
-        return
-    end
+    if not mainGui then
+        warn("StartTheGame: GUI 'Main' non trovata. Impossibile continuare la funzione.")
+        return
+    end
 
- 	task.wait()
- 	local Event = game:GetService("ReplicatedStorage").Package.Events.Start
- 	Event:InvokeServer()
- 	task.wait()
- 
- 	local Event = game:GetService("ReplicatedStorage").Package.Events.Start
- 	Event:InvokeServer()
- 
- 	task.wait()
- 
-    local bruhButton = mainGui:FindFirstChild("bruh")
-    if bruhButton then
- 	    bruhButton.Disabled = true
- 	    bruhButton.Disabled = false
-    end
- 
- 	task.wait()
- 	local Event = game:GetService("ReplicatedStorage").Package.Events.Start
- 	Event:InvokeServer()
+	task.wait()
+	local Event = game:GetService("ReplicatedStorage").Package.Events.Start
+	Event:InvokeServer()
+	task.wait()
+ 
+	local Event = game:GetService("ReplicatedStorage").Package.Events.Start
+	Event:InvokeServer()
+ 
+	task.wait()
+ 
+    local bruhButton = mainGui:FindFirstChild("bruh")
+    if bruhButton then
+	    bruhButton.Disabled = true
+	    bruhButton.Disabled = false
+    end
+ 
+	task.wait()
+	local Event = game:GetService("ReplicatedStorage").Package.Events.Start
+	Event:InvokeServer()
 end
- 
+ 
 StartTheGame()
- 
+ 
 wait(.5)
- 
+ 
 -- ==============================================================================
 -- SEZIONE FUNZIONI DI GIOCO (Senza GUI)
 -- ==============================================================================
- 
+ 
 local player = game.Players.LocalPlayer
 local playerId = player.UserId
 local data = game:GetService("ReplicatedStorage").Datas
 local playerData = data:WaitForChild(tostring(playerId))
 local statsz = playerData:WaitForChild("Defense")
- 
+local zeni = playerData:WaitForChild("Zeni")
+ 
 local function ANTIAFK()
- 	local vu = game:GetService("VirtualUser")
- 	game:GetService("Players").LocalPlayer.Idled:connect(function()
- 		vu:Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
- 		wait(1)
- 		vu:Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
- 	end)
+	local vu = game:GetService("VirtualUser")
+	game:GetService("Players").LocalPlayer.Idled:connect(function()
+		vu:Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+		wait(1)
+		vu:Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
+	end)
 end
- 
+ 
 coroutine.wrap(ANTIAFK)()
- 
+ 
 local function FloatByHimself()
- 	local function floatPlayer(character)
- 		local humanoidRootPart = character:WaitForChild("HumanoidRootPart", 10)
- 		if humanoidRootPart then
- 			local bodyPosition = Instance.new("BodyPosition")
- 			bodyPosition.Position = humanoidRootPart.Position + Vector3.new(0, 0.1, 0)
- 			bodyPosition.MaxForce = Vector3.new(0, 4000, 0)
- 			bodyPosition.P = 2000
- 			bodyPosition.D = 100
- 			bodyPosition.Parent = humanoidRootPart
- 
- 			game:GetService("RunService").Stepped:Connect(function()
-                if bodyPosition and bodyPosition.Parent and humanoidRootPart and humanoidRootPart.Parent then
- 				    bodyPosition.Position = humanoidRootPart.Position + Vector3.new(0, 0.0001, 0)
-                end
- 			end)
- 		else
- 			warn("HumanoidRootPart not found in character")
- 		end
- 	end
- 
- 	game.Players.LocalPlayer.CharacterAdded:Connect(floatPlayer)
- 	if game.Players.LocalPlayer.Character then
- 		floatPlayer(game.Players.LocalPlayer.Character)
- 	end
+	local function floatPlayer(character)
+		local humanoidRootPart = character:WaitForChild("HumanoidRootPart", 10)
+		if humanoidRootPart then
+			local bodyPosition = Instance.new("BodyPosition")
+			bodyPosition.Position = humanoidRootPart.Position + Vector3.new(0, 0.1, 0)
+			bodyPosition.MaxForce = Vector3.new(0, 4000, 0)
+			bodyPosition.P = 2000
+			bodyPosition.D = 100
+			bodyPosition.Parent = humanoidRootPart
+ 
+			game:GetService("RunService").Stepped:Connect(function()
+                if bodyPosition and bodyPosition.Parent and humanoidRootPart and humanoidRootPart.Parent then
+				    bodyPosition.Position = humanoidRootPart.Position + Vector3.new(0, 0.0001, 0)
+                end
+			end)
+		else
+			warn("HumanoidRootPart not found in character")
+		end
+	end
+ 
+	game.Players.LocalPlayer.CharacterAdded:Connect(floatPlayer)
+	if game.Players.LocalPlayer.Character then
+		floatPlayer(game.Players.LocalPlayer.Character)
+	end
 end
- 
+ 
 task.spawn(FloatByHimself)
- 
+ 
 local function Block()
- 	while true do
- 		local args = {
- 			[1] = true
- 		}
- 
- 		game:GetService("ReplicatedStorage"):WaitForChild("Package"):WaitForChild("Events"):WaitForChild("block"):InvokeServer(unpack(args))
- 		wait(.1)
- 	end
+	while true do
+		local args = {
+			[1] = true
+		}
+ 
+		game:GetService("ReplicatedStorage"):WaitForChild("Package"):WaitForChild("Events"):WaitForChild("block"):InvokeServer(unpack(args))
+		wait(.1)
+	end
 end
 task.spawn(Block)
- 
+ 
 local camera = game.Workspace.CurrentCamera
 task.spawn(function()
- 	while true and task.wait() do
- 		pcall(function()
- 			game.Players.LocalPlayer.Status.Blocking.Value = true
- 		end)
- 	end
+	while true and task.wait() do
+		pcall(function()
+			game.Players.LocalPlayer.Status.Blocking.Value = true
+		end)
+	end
 end)
- 
+ 
 local function Charge()
- 	while true do
- 		wait(.1)
- 		local args = {
- 			[1] = "Blacknwhite27" -- **Replace with your actual username!**
- 		}
- 
- 		game:GetService("ReplicatedStorage").Package.Events.cha:InvokeServer(unpack(args))
- 	end
+	while true do
+		wait(.1)
+		local args = {
+			[1] = "Blacknwhite27" -- **Replace with your actual username!**
+		}
+ 
+		game:GetService("ReplicatedStorage").Package.Events.cha:InvokeServer(unpack(args))
+	end
 end
- 
+ 
 task.spawn(Charge)
- 
+ 
 task.spawn(function()
- 	local yo = game:GetService('Players').LocalPlayer
- 	local folderData = game.ReplicatedStorage.Datas[yo.UserId]
- 	local equipRemote = game:GetService("ReplicatedStorage").Package.Events.equipskill
- 
- 	local transformaciones = {
- 		fases = {
- 			{name = "True Jui", fuerza = 500000000},
- 		}
- 	}
- 
- 	local function strength()
- 		return folderData.Strength.Value
- 	end
- 
- 	local function selectedForm()
- 		return game.Players.LocalPlayer.Status.SelectedTransformation.Value
- 	end
- 
- 	local function valorFase()
- 		return game.Players.LocalPlayer.Status.Transformation.Value
- 	end
- 
- 	local function ki()
- 		return game.Workspace.Living[yo.Name].Stats.Ki.Value
- 	end
- 
- 	local function kiRequerido()
- 		return game:GetService("Players").LocalPlayer.Character.Stats.Ki.MaxValue / 10
- 	end
- 
- 	local function ejecutarForma()
- 		while selectedForm() ~= valorFase() do
- 			pcall(function()
- 				if ki() > (kiRequerido() + 10) then
- 					-- Rimossa la differenza di PlaceId, usa sempre questo evento
- 					game:GetService("ReplicatedStorage").Package.Events.ta:InvokeServer()
- 				end
- 			end)
- 			task.wait()
- 		end
- 	end
- 
- 	local function transformarse(array)
- 		for _, v in pairs(transformaciones[array]) do
- 			if strength() >= v.fuerza then
- 				local success, err = pcall(function()
- 					equipRemote:InvokeServer(v.name)
- 				end)
- 				if not success then
- 					print("Failed to equip transformation:", err)
- 				end
- 				if equipRemote:InvokeServer(v.name) then
- 					break
- 				end
- 			end
- 		end
- 		ejecutarForma()
- 	end
- 
- 	while true do
- 		transformarse("fases")
- 		task.wait(1.2)
- 	end
+	local yo = game:GetService('Players').LocalPlayer
+	local folderData = game.ReplicatedStorage.Datas[yo.UserId]
+	local events = game.ReplicatedStorage.Package.Events
+	local equipRemote = game:GetService("ReplicatedStorage").Package.Events.equipskill
+	
+	local transformaciones = {
+		fases = {
+			{name = "True Jui", fuerza = 750000000},
+		}
+	}
+ 
+	local function strength()
+		return folderData.Strength.Value
+	end
+ 
+	local function selectedForm()
+		return game.Players.LocalPlayer.Status.SelectedTransformation.Value
+	end
+ 
+	local function valorFase()
+		return game.Players.LocalPlayer.Status.Transformation.Value
+	end
+ 
+	local function ki()
+		return game.Workspace.Living[yo.Name].Stats.Ki.Value
+	end
+ 
+	local function kiRequerido()
+		return game:GetService("Players").LocalPlayer.Character.Stats.Ki.MaxValue / 10
+	end
+ 
+	local function ejecutarForma()
+		while selectedForm() ~= valorFase() do
+			pcall(function()
+				if ki() > (kiRequerido() + 10) then
+					if game.PlaceId == 3311165597 then
+					game:GetService("ReplicatedStorage").Package.Events.Hehehe:InvokeServer()
+					elseif game.PlaceId == 5151400895 then
+						game:GetService("ReplicatedStorage").Package.Events.a.Cece:InvokeServer()
+					end
+				end
+			end)
+			task.wait()
+		end
+	end
+ 
+	local function transformarse(array)
+		for _, v in pairs(transformaciones[array]) do
+			if strength() >= v.fuerza then
+				local success, err = pcall(function()
+					equipRemote:InvokeServer(v.name)
+				end)
+				if not success then
+					print("Failed to equip transformation:", err)
+				end
+				if equipRemote:InvokeServer(v.name) then
+					break 
+				end
+			end
+		end
+		ejecutarForma()
+	end
+ 
+	while true do
+		transformarse("fases")
+		task.wait(1.2)
+	end
 end)
- 
+ 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
- 
+local Events = ReplicatedStorage:WaitForChild("Package"):WaitForChild("Events")
+ 
 local function SafeWaitForChild(parent, name, timeout)
- 	local success, result = pcall(function()
- 		return parent:WaitForChild(name, timeout)
- 	end)
- 	if not success then
- 		warn("Failed to find " .. name .. ": " .. tostring(result))
- 		return nil
- 	end
- 	return result
+	local success, result = pcall(function()
+		return parent:WaitForChild(name, timeout)
+	end)
+	if not success then
+		warn("Failed to find " .. name .. ": " .. tostring(result))
+		return nil
+	end
+	return result
 end
- 
+ 
 local AllBosses = {
- 	{
- 		Name = "Broccoli",
- 		MinStats = 1000,
- 		MaxStats = 100000000000000000000000000000000000000000000000,
- 		FightLocation = workspace.Living,
- 		Distance = -2,
- 	}
+	{
+		Name = "Broccoli",
+		MinStats = 1000,
+		MaxStats = 100000000000000000000000000000000000000000000000,
+		QuestLocation = workspace.Others.NPCs,
+		FightLocation = workspace.Living,
+		Distance = -2,
+	}
 }
 
 local character, humanoid, humanoidRootPart
- 
+ 
 -- ==============================================================================
 -- SEZIONE DI COMBATTIMENTO
 -- ==============================================================================
 local function TeleportAndFight(bossData)
- 	local function getValidBoss()
- 		if not (humanoid and humanoid.Health > 0) then return nil end
- 		local bossModel = bossData.FightLocation:FindFirstChild(bossData.Name)
- 		if not (bossModel and bossModel.Parent) then return nil end
- 		local bossHumanoid = bossModel:FindFirstChildOfClass("Humanoid")
- 		local bossHRP = bossModel:FindFirstChild("HumanoidRootPart")
- 		if bossHumanoid and bossHRP and bossHumanoid.Health > 0 then
- 			return bossModel
- 		end
- 		return nil
- 	end
+	local function getValidBoss()
+		if not (humanoid and humanoid.Health > 0) then return nil end
+		local bossModel = bossData.FightLocation:FindFirstChild(bossData.Name)
+		if not (bossModel and bossModel.Parent) then return nil end
+		local bossHumanoid = bossModel:FindFirstChildOfClass("Humanoid")
+		local bossHRP = bossModel:FindFirstChild("HumanoidRootPart")
+		if bossHumanoid and bossHRP and bossHumanoid.Health > 0 then
+			return bossModel
+		end
+		return nil
+	end
 
- 	while true do
- 		local currentBoss = getValidBoss()
- 		if not currentBoss then
- 			break
- 		end
+	while true do
+		local currentBoss = getValidBoss()
+		if not currentBoss then
+			break
+		end
 
- 		local bossHRP = currentBoss.HumanoidRootPart
- 		pcall(function()
- 			camera.CFrame = CFrame.new(camera.CFrame.Position, bossHRP.Position)
- 			local behindOffset = bossHRP.CFrame.LookVector * bossData.Distance
- 			local behindPosition = bossHRP.Position + behindOffset
- 			humanoidRootPart.CFrame = CFrame.new(behindPosition, bossHRP.Position)
- 		end)
+		local bossHRP = currentBoss.HumanoidRootPart
+		pcall(function()
+			camera.CFrame = CFrame.new(camera.CFrame.Position, bossHRP.Position)
+			local behindOffset = bossHRP.CFrame.LookVector * bossData.Distance
+			local behindPosition = bossHRP.Position + behindOffset
+			humanoidRootPart.CFrame = CFrame.new(behindPosition, bossHRP.Position)
+		end)
 
- 		pcall(function()
- 			-- Rimossa la differenza di PlaceId, usa sempre questi eventi
- 			local letsplayagame = ReplicatedStorage:WaitForChild("Package"):WaitForChild("Events"):WaitForChild("mel")
- 			game:GetService("ReplicatedStorage").Package.Events.p:FireServer("Blacknwhite27", 1)
- 			coroutine.wrap(function() letsplayagame:InvokeServer("God Slicer", "Blacknwhite27") end)()
- 			coroutine.wrap(function() letsplayagame:InvokeServer("Meteor Crash", "Blacknwhite27") end)()
- 			coroutine.wrap(function() letsplayagame:InvokeServer("Wolf Fang Fist", "Blacknwhite27") end)()
- 			coroutine.wrap(function() letsplayagame:InvokeServer("Mach Kick", "Blacknwhite27") end)()
- 			coroutine.wrap(function() letsplayagame:InvokeServer("Spirit Barrage", "Blacknwhite27") end)()
- 			coroutine.wrap(function() letsplayagame:InvokeServer("Super Dragon Fist", "Blacknwhite27") end)()
- 		end)
+		pcall(function()
+			if game.PlaceId == 3311165597 then
+				local letsplayagame = ReplicatedStorage:WaitForChild("Package"):WaitForChild("Events"):WaitForChild("letsplayagame")
+				game:GetService("ReplicatedStorage").Package.Events.p:FireServer("Blacknwhite27", 1)
+				coroutine.wrap(function() letsplayagame:InvokeServer("Meteor Crash", "Blacknwhite27") end)()
+				coroutine.wrap(function() letsplayagame:InvokeServer("Wolf Fang Fist", "Blacknwhite27") end)()
+				coroutine.wrap(function() letsplayagame:InvokeServer("Mach Kick", "Blacknwhite27") end)()
+				coroutine.wrap(function() letsplayagame:InvokeServer("Spirit Barrage", "Blacknwhite27") end)()
+				coroutine.wrap(function() letsplayagame:InvokeServer("Super Dragon Fist", "Blacknwhite27") end)()
+			elseif game.PlaceId == 5151400895 then
+				local Higoober = ReplicatedStorage:WaitForChild("Package"):WaitForChild("Events"):WaitForChild("Haha")
+				game:GetService("ReplicatedStorage").Package.Events.p:FireServer("Blacknwhite27", 1)
+				coroutine.wrap(function() Higoober:InvokeServer("Meteor Crash", "Blacknwhite27") end)()
+				coroutine.wrap(function() Higoober:InvokeServer("Wolf Fang Fist", "Blacknwhite27") end)()
+				coroutine.wrap(function() Higoober:InvokeServer("Mach Kick", "Blacknwhite27") end)()
+				coroutine.wrap(function() Higoober:InvokeServer("Spirit Barrage", "Blacknwhite27") end)()
+				coroutine.wrap(function() Higoober:InvokeServer("Super Dragon Fist", "Blacknwhite27") end)()	
+			end
+		end)
 
- 		task.wait()
- 	end
+		task.wait()
+	end
 
- 	print(bossData.Name .. " non più valido. Fine del combattimento.")
- 	pcall(function()
- 		camera.CameraType = Enum.CameraType.Custom
- 		camera.CameraSubject = humanoid
- 	end)
+	print(bossData.Name .. " non più valido. Fine del combattimento.")
+	pcall(function()
+		camera.CameraType = Enum.CameraType.Custom
+		camera.CameraSubject = humanoid
+	end)
 end
- 
+ 
 local function WaitForBossToSpawn(bossData, timeLimit)
- 	local startTime = os.time()
- 	local bossReady = false
- 
- 	repeat
-        if not (humanoid and humanoid.Health > 0) then return end
- 		task.wait()
- 		local boss = SafeWaitForChild(bossData.FightLocation, bossData.Name)
- 		bossReady = boss and boss:FindFirstChild("HumanoidRootPart") and boss:FindFirstChild("Humanoid")
- 	until bossReady or os.time() - startTime > timeLimit
- 
- 	if bossReady then
- 		print("Boss " .. bossData.Name .. " è apparso!")
-        task.wait()
- 		TeleportAndFight(bossData)
- 	else
- 		print("Impossibile trovare " .. bossData.Name .. " entro il tempo limite.")
- 	end
+	local startTime = os.time()
+	local bossReady = false
+ 
+	repeat
+        if not (humanoid and humanoid.Health > 0) then return end
+		task.wait() 
+		local boss = SafeWaitForChild(bossData.FightLocation, bossData.Name)
+		bossReady = boss and boss:FindFirstChild("HumanoidRootPart") and boss:FindFirstChild("Humanoid")
+	until bossReady or os.time() - startTime > timeLimit 
+ 
+	if bossReady then
+		print("Boss " .. bossData.Name .. " è apparso!")
+        task.wait()
+		TeleportAndFight(bossData)
+	else
+		print("Impossibile trovare " .. bossData.Name .. " entro il tempo limite.")
+	end
 end
- 
-local function FindAndFightBoss(bossData)
-    if not bossData then return end
- 
- 	print("Inizio il farming per " .. bossData.Name .. ". Attendo la sua comparsa...")
- 	WaitForBossToSpawn(bossData, 60)
+ 
+local function CheckAndFightBoss(bossData)
+    if not bossData then return end
+	
+	local questStarted = false
+	print("Inizio la missione per " .. bossData.Name)
+
+	local startTime = os.time()
+	local questTimeout = 30 
+
+	while not questStarted do
+		if os.time() - startTime > questTimeout then
+			print("TIMEOUT MISSIONE: Impossibile ottenere la quest per " .. bossData.Name .. ". Resetto il personaggio.")
+			humanoid.Health = 0
+			return
+		end
+        if not (humanoid and humanoid.Health > 0) then return end
+
+		local bossNpc = SafeWaitForChild(bossData.QuestLocation, bossData.Name)
+		if bossNpc then
+			while playerData:WaitForChild("Quest").Value ~= bossData.Name do
+				if os.time() - startTime > questTimeout then break end
+                if not (humanoid and humanoid.Health > 0) then return end
+				humanoidRootPart.CFrame = bossNpc.HumanoidRootPart.CFrame * CFrame.new(0, 0, -3)
+				Events:WaitForChild("Qaction"):InvokeServer(bossNpc)
+                task.wait() 
+			end
+
+			if playerData:WaitForChild("Quest").Value == bossData.Name then
+				print("Azione missione invocata e confermata per " .. bossData.Name) 
+				questStarted = true
+			end
+		else
+			task.wait() 
+		end
+	end
+
+	if questStarted then
+		WaitForBossToSpawn(bossData, 60)
+	end
 end
- 
+ 
 -- ==============================================================================
 -- GESTIONE DEL RESPAWN
 -- ==============================================================================
 local function onCharacterAdded(newCharacter)
-    print("Nuovo personaggio rilevato. Aggiornamento variabili globali...")
- 	character = newCharacter
- 	humanoidRootPart = character:WaitForChild("HumanoidRootPart")
- 	humanoid = character:WaitForChild("Humanoid")
- 
- 	humanoid.Died:Connect(function()
- 		print("EVENTO DIED RILEVATO! In attesa di respawn...")
- 	end)
+    print("Nuovo personaggio rilevato. Aggiornamento variabili globali...")
+	character = newCharacter
+	humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+	humanoid = character:WaitForChild("Humanoid")
+ 
+	humanoid.Died:Connect(function()
+		print("EVENTO DIED RILEVATO! In attesa di respawn...")
+	end)
 end
- 
+ 
 player.CharacterAdded:Connect(onCharacterAdded)
- 
+ 
 if player.Character then
- 	onCharacterAdded(player.Character)
+	onCharacterAdded(player.Character)
 else
-    print("In attesa del caricamento iniziale del personaggio...")
-    onCharacterAdded(player.CharacterAdded:Wait())
+    print("In attesa del caricamento iniziale del personaggio...")
+    onCharacterAdded(player.CharacterAdded:Wait())
 end
 -- ==============================================================================
 
@@ -339,24 +388,25 @@ end
 -- FUNZIONE PRINCIPALE DI CONTROLLO (Main)
 -- ==============================================================================
 local function Main()
-    while true do
-        task.wait(1)
- 
-        if not (humanoid and humanoid.Health > 0) then
-            print("Il giocatore è morto o non valido. In attesa del respawn...")
-            task.wait(1)
-            continue
-        end
- 
- 		local bossData = AllBosses[1]
-        if statsz.Value >= bossData.MinStats then
- 			print("STATO FARMING: Z Broccoli")
- 			FindAndFightBoss(bossData)
- 		else
- 			print("Statistiche insufficienti per Z Broccoli. In attesa...")
- 			task.wait(10)
- 		end
-    end
+    while true do
+        task.wait(1)
+        
+        if not (humanoid and humanoid.Health > 0) then
+            print("Il giocatore è morto o non valido. In attesa del respawn...")
+            task.wait(1) 
+            continue 
+        end
+		
+		-- La logica ora punta sempre e solo a Z Broccoli
+		local bossData = AllBosses[1] -- Prende il primo (e unico) boss dalla lista
+        if statsz.Value >= bossData.MinStats then
+			print("STATO FARMING: Z Broccoli")
+			CheckAndFightBoss(bossData)
+		else
+			print("Statistiche insufficienti per Z Broccoli. In attesa...")
+			task.wait(10) -- Attende più a lungo se le stats non sono sufficienti
+		end
+    end
 end
 
 task.spawn(Main)
