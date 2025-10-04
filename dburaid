@@ -148,6 +148,7 @@ task.spawn(function()
 
     local transformaciones = {
         fases = {
+            {name = "Time Breaker", fuerza = 500000000},
             {name = "True Jui", fuerza = 500000000},
         }
     }
